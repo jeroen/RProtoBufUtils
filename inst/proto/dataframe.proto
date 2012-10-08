@@ -66,7 +66,7 @@ message Integer {
   repeated int32 value = 1;
 
   optional string name = 101;
-  optional int32 index = 102 [default = 999999999];
+  optional int32 index = 102;
   optional int32 NA_VALUE = 103 [default = -2147483648];
 }
 
@@ -75,8 +75,8 @@ message Complex {
   repeated double imaginary = 2;
 
   optional string name = 101;
-  optional int32 index = 102 [default = 999999999];
-  optional int32 NA_VALUE = 103 [default = -2147483648];
+  optional int32 index = 102;
+  optional double NA_VALUE = 103;
 }
 
 message Dataframe {
