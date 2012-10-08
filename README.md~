@@ -31,7 +31,7 @@ Proto schemas
 
 The default `serialize_pb` uses [`rexp.proto`](https://www.datadr.org/doc/serialize.html), which is also used by the RHIPE project to serialize R objects for use with HADOOP. This proto is designed to be most general, and supports all standard S3 objects, like vectors, factors, lists, dataframes and any combination thereof. It also stores attributes and missing values. It does not however support some R specific constructs, like functions, environments, S4 classes, etc.
 
-The `rexp.proto` message is pretty general, but also pretty verbose. In the case of an application that only needs to serialize a certain class of objects, it might be wise to define a `.proto` and mapper specifically for this class of objects. The package also includes a proto specifically for dataframes, which might be a bit less general and more simple for application that only needs to use data frames:
+The `rexp.proto` message definition is very general, but also pretty verbose. In the case of an application that only needs to serialize a certain class of objects, it might be wise to define a proto definition and mapper specifically for this class of objects. For example, the RProtoBufUtils package includes a `dataframe.proto` specifically for dataframes. This proto is a bit less general and might be more simple to understand for 3rd parties when communicating a dataset. 
 
     msg <- tempfile();
     serialize_pb(iris, msg, proto="dataframe");
