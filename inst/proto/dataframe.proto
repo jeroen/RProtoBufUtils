@@ -1,0 +1,93 @@
+// Column based data frame
+// Conventions:
+// Field 1 holds value
+// Field 101 holds column name (inside a dataframe)
+// Field 102 holds column index (inside a dataframe)
+// Field 103 holds value that is NA
+
+message Logical {
+  enum RBOOL {
+    FALSE = 0;
+    TRUE = 1;
+    NA = 2;
+  }
+  repeated RBOOL value = 1;
+  
+  optional string name = 101;
+  optional int32 index = 102;  
+}
+
+message Numeric {
+  repeated double value = 1;
+  
+  optional string name = 101;
+  optional int32 index = 102;    
+  optional double NA_VALUE = 103; //doubles already have a NA 
+}
+
+message Factor {
+  repeated int32 value = 1;
+  repeated int32 levels = 2;
+  repeated string labels = 3;  
+  required bool ordered = 4 [default = false];
+ 
+  optional string name = 101;
+  optional int32 index = 102;      
+  optional int32 NA_VALUE = 103 [default = 0];
+}
+
+message Character {
+  repeated string value = 1;
+
+  optional string name = 101;
+  optional int32 index = 102;    
+  optional string NA_VALUE = 103 [default = "NA"];
+}
+
+message POSIXt {
+  repeated double value = 1;
+  optional string tzone = 2;
+
+  optional string name = 101;
+  optional double index = 102;    
+  optional double NA_VALUE = 103 [default = 0];
+  
+}
+
+message Date {
+  repeated string value = 1;
+  
+  optional string name = 101;
+  optional int32 index = 102;
+  optional string NA_VALUE = 103 [default = "0000-00-00"];
+}
+
+message Integer {
+  repeated int32 value = 1;
+
+  optional string name = 101;
+  optional int32 index = 102 [default = 999999999];
+  optional int32 NA_VALUE = 103 [default = -2147483648];
+}
+
+message Complex {
+  repeated double real = 1;
+  repeated double imaginary = 2;
+
+  optional string name = 101;
+  optional int32 index = 102 [default = 999999999];
+  optional int32 NA_VALUE = 103 [default = -2147483648];
+}
+
+message Dataframe {
+  repeated Numeric Numeric = 1;
+  repeated Integer Integer = 2;
+  repeated Factor Factor = 3;
+  repeated Logical Logical = 4;
+  repeated POSIXt POSIXt = 5;
+  repeated Character Character = 6; 
+  repeated Date Date = 7;
+  repeated Complex Complex = 8;
+
+  repeated string rownames = 101;
+}

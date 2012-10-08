@@ -1,0 +1,21 @@
+Package: RProtoBufUtils
+Type: Package
+Title: Tools and utilities for using RProtoBuf
+Version: 0.1.0
+Date: 2012-10-07
+Author: Jeroen Ooms
+Maintainer: Jeroen Ooms <jeroen.ooms@stat.ucla.edu>
+Description: This package contains some higher level functions are helpful with
+    converting R objects to Protocol Buffer messages.
+License: GPL
+URL: https://github.com/jeroenooms/RProtoBufUtils#readme
+Depends:
+    R (>= 2.14)
+Imports:
+    RProtoBuf
+Collate:
+    'onLoad.R'
+    'pb_dataframe.R'
+    'pb.R'
+    'pb_rexp.R'
+    'serialize_pb.R'
