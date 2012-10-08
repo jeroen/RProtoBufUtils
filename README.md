@@ -54,7 +54,7 @@ The RProtoBuf package ships with a dataframe named `testdata` which contains all
  - complex
  - logical 
 
-This dataset is used to test if it serializes and unserialized without loss of information or precision. This dataset is also useful for testing unserialization in another language. 
+This dataset is used to test if it properly serializes and unserializes without loss of information or precision. This dataset is also useful for testing unserialization in another language. 
 
     #load data
     data(testdata)
