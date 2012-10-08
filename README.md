@@ -3,7 +3,7 @@ RProtoBufUtils
 
 This package provides some tools and utilities to serialize R objects to with protocol buffers. It builds on the [RProtoBuf](http://r-forge.r-project.org/projects/rprotobuf/) package, which interfaces to the official protocol buffers C++ library by Google.
 
-The main advantage of serializing an object to a protocol buffer message, as opposed to native R serialization, is that protocol buffers is an inter-operable format that can be read/written by other programming languages. The main disadvantage is that some special R-specific objects (functions, environments, S4 classes, etc) are not supported and will get lost in the process (with a warning).
+The main advantage of serializing an object to a protocol buffer message, as opposed to native R serialization, is that protocol buffers is an inter-operable format that can be read/written by other programming languages. The main disadvantage is that some special R-specific object types are not supported and will get lost in the process (with a warning).
 
 How it works
 ------------
