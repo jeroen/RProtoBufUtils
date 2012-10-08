@@ -18,7 +18,7 @@ This package contains both some example .proto files designed for serializing R 
 Example
 --------
 
-The `serialize_pb` function mimics native serializion and writes an R object to file or connection, in protobuf format. By default it uses the [`rexp.proto`](https://www.datadr.org/doc/serialize.html) schema:
+The `serialize_pb` function mimics native serializion and writes an R object to file or connection, in protobuf format. By default it uses the `rexp.proto` schema.
 
     msg <- tempfile();
     serialize_pb(iris, msg);
@@ -29,7 +29,7 @@ The `serialize_pb` function mimics native serializion and writes an R object to 
 Proto schemas
 -------------
 
-The default `serialize_pb` uses [`rexp.proto`](https://www.datadr.org/doc/serialize.html), which is also used by the RHIPE project to serialize R objects for use with HADOOP. This proto is designed to be most general, and supports all standard S3 objects, like vectors, factors, lists, dataframes and any combination thereof. It also stores attributes and missing values. It does not however support some R specific constructs, like functions, environments, S4 classes, etc.
+The default `serialize_pb` uses [`rexp.proto`](https://github.com/jeroenooms/RProtoBufUtils/blob/master/inst/proto/dataframe.proto), which is [also used by the RHIPE project](https://www.datadr.org/doc/serialize.html) to serialize R objects for use with HADOOP. This proto is designed to be most general, and supports all standard S3 objects, like vectors, factors, lists, dataframes and any combination thereof. It also stores attributes and missing values. It does not however support some R specific constructs, like functions, environments, S4 classes, etc.
 
 The `rexp.proto` message definition is very general, but also pretty verbose. In the case of an application that only needs to serialize a certain class of objects, it might be wise to define a proto definition and mapper specifically for this class of objects. For example, the RProtoBufUtils package includes a `dataframe.proto` specifically for dataframes. This proto is a bit less general and might be more simple to understand for 3rd parties when communicating a dataset. 
 
