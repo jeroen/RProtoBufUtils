@@ -31,7 +31,7 @@ Proto schemas
 
 The default `serialize_pb` uses [`rexp.proto`](https://github.com/jeroenooms/RProtoBufUtils/blob/master/inst/proto/dataframe.proto), which is [also used by the RHIPE project](https://www.datadr.org/doc/serialize.html) to serialize R objects for use with HADOOP. This proto is designed to be most general, and supports all standard S3 objects, like vectors, factors, lists, dataframes and any combination thereof. It also stores attributes and missing values. It does not however support some R specific constructs, like functions, environments, S4 classes, etc.
 
-The [`rexp.proto`](https://github.com/jeroenooms/RProtoBufUtils/blob/master/inst/proto/rexp.proto) message definition is very general, but also pretty verbose. In the case of an application that only needs to serialize a certain class of objects, it might be wise to define a proto definition and mapper specifically for this class of objects. For example, the RProtoBufUtils package includes a [`dataframe.proto`](https://github.com/jeroenooms/RProtoBufUtils/blob/master/inst/proto/dataframe.proto) specifically for dataframes. This proto is a bit less general and might be more simple to understand for 3rd parties when communicating a dataset. 
+The [`rexp.proto`](https://github.com/jeroenooms/RProtoBufUtils/blob/master/inst/proto/rexp.proto) message definition is very general, but also pretty verbose. In the case of an application that only needs to serialize a certain class of objects, it might be wise to define a proto definition and mapper specifically for this class of objects. For example, the RProtoBufUtils package includes a [`dataframe.proto`](https://github.com/jeroenooms/RProtoBufUtils/blob/master/inst/proto/dataframe.proto) specifically for dataframes. This proto is a bit less general and might be more simple to use by 3rd parties when communicating a dataset. 
 
     msg <- tempfile();
     serialize_pb(iris, msg, proto="dataframe");
@@ -39,6 +39,38 @@ The [`rexp.proto`](https://github.com/jeroenooms/RProtoBufUtils/blob/master/inst
     identical(iris, obj); 
 
 Note, again, that one needs to communicate clearly with the consumer of the message which .proto was used to serialize the object. The serialized data can not be interpreted without the proper .proto file.
+
+Unit Test
+---------
+
+The RProtoBuf package ships with a dataframe named `testdata` which contains all of the common vector types, including some missing values for each.
+
+ - numeric (double)
+ - integer
+ - factor
+ - character
+ - Date
+ - POSIXct (timestamp) 
+ - complex
+ - logical 
+
+This dataset is used to test if it serializes and unserialized without loss of information or precision. This dataset is also useful for inspecting what the data looks like when it is unserialized in another language. 
+
+    #load data
+    data(testdata)
+
+    #test rexp.proto
+    msg <- tempfile();
+    serialize_pb(testdata, msg, proto="rexp");
+    obj <- unserialize_pb(msg, proto="rexp");
+    identical(testdata, obj);
+	
+    #test dataframe.proto
+    msg <- tempfile();
+    serialize_pb(testdata, msg, proto="dataframe");
+    obj <- unserialize_pb(msg, proto="dataframe");
+    identical(testdata, obj);
+
 
 Limitations
 -----------

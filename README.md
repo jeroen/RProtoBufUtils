@@ -40,6 +40,38 @@ The [`rexp.proto`](https://github.com/jeroenooms/RProtoBufUtils/blob/master/inst
 
 Note, again, that one needs to communicate clearly with the consumer of the message which .proto was used to serialize the object. The serialized data can not be interpreted without the proper .proto file.
 
+Unit Test
+---------
+
+The RProtoBuf package ships with a dataframe named `testdata` which contains all of the common vector types, including some missing values for each.
+
+ - numeric (double)
+ - integer
+ - factor
+ - character
+ - Date
+ - POSIXct (timestamp) 
+ - complex
+ - logical 
+
+This dataset is used to test if it serializes and unserialized without loss of information or precision. This dataset is also useful for testing unserialization in another language. 
+
+    #load data
+    data(testdata)
+
+    #test rexp.proto
+    msg <- tempfile();
+    serialize_pb(testdata, msg, proto="rexp");
+    obj <- unserialize_pb(msg, proto="rexp");
+    identical(testdata, obj);
+	
+    #test dataframe.proto
+    msg <- tempfile();
+    serialize_pb(testdata, msg, proto="dataframe");
+    obj <- unserialize_pb(msg, proto="dataframe");
+    identical(testdata, obj);
+
+
 Limitations
 -----------
 
