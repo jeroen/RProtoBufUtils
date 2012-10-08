@@ -1,5 +1,5 @@
-RProtoBuf
-=========
+RProtoBufUtils
+==============
 
 This package provides some tools and utilities to serialize R objects to with protocol buffers. It builds on the [RProtoBuf](http://r-forge.r-project.org/projects/rprotobuf/) package, which interfaces to the official protocol buffers C++ library by Google.
 
