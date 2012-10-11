@@ -8,10 +8,11 @@ The main advantage of serializing an object to a protocol buffer message, as opp
 How it works
 ------------
 
-Serializing an R object to protocol buffer message requires the design of two parts:
+Designing a R object to protobuf serialization requires defining 3 parts:
 
- - A .proto file which defines a schema for the structure of the message.
- - A mapping between (a class of) R objects to the specific proto message.
+ - The class of R objects that is supported in the serialization. 
+ - The .proto file which defines a schema for the structure of the message.
+ - The mapping between this class of R objects and the proto message.
 
 This package contains both some example .proto files designed for serializing R objects, as well as R code that will help with converting R data/objects to this format. Note that in order for a third party to unserialize a message, they will need both the serialized data as well as the specific proto file.
 

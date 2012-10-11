@@ -17,4 +17,9 @@
   "stockdata". The output can be serialized to protocol
   buffer "stocks".
 }
+\examples{
+google <- download_stocks("GOOG");
+serialize_pb(google, "msg_stocks.bin", "stocks");
+serialize_pb(google, "msg_dataframe.bin", "dataframe");
+}
 

@@ -6,6 +6,9 @@
 #' @param symbol Stock ticker symbol. Usually string of 3 or 4 characters.
 #' @return a data frame with class "stockdata" 
 #' @export
+#' @examples google <- download_stocks("GOOG");
+#' serialize_pb(google, "msg_stocks.bin", "stocks");
+#' serialize_pb(google, "msg_dataframe.bin", "dataframe");
 download_stocks <- function(symbol="YHOO"){
   url <- paste(
     "http://ichart.finance.yahoo.com/table.csv?s=", symbol, 
