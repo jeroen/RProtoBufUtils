@@ -1,7 +1,7 @@
 # Example python script that reads protobuf messages of serialized R objects.
 # To (re)produce these messages yourself, see /inst/messages/build.R script 
 # in the RProtoBufUtils package. Before running this script, download and 
-# compile the .proto files (see compile_python.sh)
+# compile the .proto files into Python modules (see compile_python.sh).
 
 #import the compiled proto definition, see compile_python.sh
 import stocks_pb2;

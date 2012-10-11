@@ -1,6 +1,6 @@
 #!/bin/sh
 
-### How to compile .proto definitions to Python modules
+### How to compile .proto definitions to Python pb2 modules
 #
 # The .proto files are in the dir inst/proto of the source package.
 # If RProtoBufUtils has been installed in the standard debian/ubuntu location you can find them in:
