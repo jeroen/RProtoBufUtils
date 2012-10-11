@@ -3,10 +3,17 @@
 #To reproduce them, install the R and the RProtoBufUtils package, and execute these lines.
 library(RProtoBufUtils);
 setwd("~/Desktop")
-serialize_pb(cars, "cars_dataframe.bin", "dataframe")
-serialize_pb(cars, "cars_rexp.bin", "rexp")
 
-goog <- download_stocks("GOOG")
-serialize_pb(goog, "goog_stocks.bin", "stocks")
-serialize_pb(cars, "goog_dataframe.bin", "dataframe")
-serialize_pb(cars, "goog_rexp.bin", "rexp")
+#serialize using the most general 'rexp' definition.
+serialize_pb(cars, "msg_rexp.bin", "rexp")
+
+#serialize using the 'dataframe' definition.
+serialize_pb(iris, "msg_dataframe.bin", "dataframe")
+
+#serialize using the 'stocks' definition, specifically for stocks data
+google <- download_stocks("GOOG")
+serialize_pb(google, "msg_stocks.bin", "stocks")
+
+#stocks data is a dataframe, so this would also work:
+serialize_pb(cars, "newmsg_dataframe.bin", "dataframe")
+serialize_pb(cars, "newmsg_rexp.bin", "rexp")
