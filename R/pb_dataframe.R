@@ -14,7 +14,7 @@ as.pb.logical <- function(x, name, index, ...){
 	xvalue <- as.integer(x);
 	xvalue[is.na(xvalue)] <- 2;
 	#create proto buffer
-	buf <- new(pb(Logical),
+	buf <- new(pb(dataframe.Logical),
 		value=xvalue
 	);
 	if(!missing(name)) buf$name <- name;
@@ -23,7 +23,7 @@ as.pb.logical <- function(x, name, index, ...){
 }
 
 from.pb_Logical <- function(x){
-	stopifnot(x@type == "Logical");
+	stopifnot(x@type == "dataframe.Logical");
 	xvalue <- x$value;
 	xvalue[xvalue==2] <- NA;
 	xvalue <- as.logical(xvalue);
@@ -34,7 +34,7 @@ as.pb.complex <- function(x, name, index, ...){
 	xreal <- Re(x);
 	ximaginary <- Im(x);
 
-	buf <- new(pb(Complex),
+	buf <- new(pb(dataframe.Complex),
 		real=xreal,
 		imaginary=ximaginary
 	);
@@ -44,7 +44,7 @@ as.pb.complex <- function(x, name, index, ...){
 }
 
 from.pb_Complex <- function(x){
-	stopifnot(x@type == "Complex");
+	stopifnot(x@type == "dataframe.Complex");
 	xreal <- x$real;
 	ximaginary <- x$imaginary;
 	
@@ -60,7 +60,7 @@ from.pb_Complex <- function(x){
 
 as.pb.numeric <- function(x, name, index, ...){
 	#create proto buffer
-	buf <- new(pb(Numeric),
+	buf <- new(pb(dataframe.Numeric),
 		value=x
 	);
 	if(!missing(name)) buf$name <- name;
@@ -69,7 +69,7 @@ as.pb.numeric <- function(x, name, index, ...){
 }
 
 from.pb_Numeric <- function(x){
-	stopifnot(x@type == "Numeric");
+	stopifnot(x@type == "dataframe.Numeric");
 	xvalue <- x$value;
 	if(x$has("NA_VALUE")){
 		NA_VALUE <- x$NA_VALUE;
@@ -80,7 +80,7 @@ from.pb_Numeric <- function(x){
 
 as.pb.integer <- function(x, name, index, ...){
 	#create proto buffer
-	buf <- new(pb(Integer),
+	buf <- new(pb(dataframe.Integer),
 			value=x
 	);
 	if(!missing(name)) buf$name <- name;
@@ -89,7 +89,7 @@ as.pb.integer <- function(x, name, index, ...){
 }
 
 from.pb_Integer <- function(x){
-	stopifnot(x@type == "Integer");
+	stopifnot(x@type == "dataframe.Integer");
 	xvalue <- x$value;
 	if(x$has("NA_VALUE")){
 		NA_VALUE <- x$NA_VALUE;
@@ -108,7 +108,7 @@ as.pb.factor <- function(x, name, index, ...){
 	xordered <- is.ordered(x);
 	
 	#create proto buffer
-	buf <- new(pb(Factor),
+	buf <- new(pb(dataframe.Factor),
 		levels = xlevels,
 		labels = xlabels,
 		value = xvalue,
@@ -122,7 +122,7 @@ as.pb.factor <- function(x, name, index, ...){
 
 
 from.pb_Factor <- function(x){
-	stopifnot(x@type == "Factor");
+	stopifnot(x@type == "dataframe.Factor");
 	xvalue <- x$value;
 	xlevels <- x$levels;
 	xlabels <- x$labels;
@@ -141,7 +141,7 @@ as.pb.character <- function(x, name, index, ...){
 	xvalue <- as.character(x);
 	xvalue[is.na(xvalue)] <- NA_VALUE;
 	#create proto buffer
-	buf <- new(pb(Character),
+	buf <- new(pb(dataframe.Character),
 		value=xvalue,
 		NA_VALUE = NA_VALUE
 	);
@@ -151,7 +151,7 @@ as.pb.character <- function(x, name, index, ...){
 }
 
 from.pb_Character <- function(x){
-	stopifnot(x@type == "Character");
+	stopifnot(x@type == "dataframe.Character");
 	
 	xvalue <- x$value;
 	if(x$has("NA_VALUE")){
@@ -166,7 +166,7 @@ as.pb.POSIXt <- function(x, name, index, ...){
 	x <- as.POSIXct(x);
 	xvalue <- unclass(x);
 	xvalue[is.na(xvalue)] <- NA_VALUE;
-	buf <- new(pb(POSIXt),
+	buf <- new(pb(dataframe.POSIXt),
 		value=xvalue,
 		NA_VALUE = NA_VALUE
 	)
@@ -180,7 +180,7 @@ as.pb.POSIXt <- function(x, name, index, ...){
 }
 
 from.pb_POSIXt <- function(x){
-	stopifnot(x@type == "POSIXt");
+	stopifnot(x@type == "dataframe.POSIXt");
 	
 	xvalue <- x$value
 	if(x$has("NA_VALUE")){
@@ -201,7 +201,7 @@ as.pb.Date <- function(x, name, index, ...){
 	NA_VALUE <- "0000-00-00";
 	xvalue <- as.character(x);
 	xvalue[is.na(xvalue)] <- NA_VALUE;	
-	buf <- new(pb(Date),
+	buf <- new(pb(dataframe.Date),
 		value=xvalue,
 		NA_VALUE = NA_VALUE
 	)	
@@ -211,7 +211,7 @@ as.pb.Date <- function(x, name, index, ...){
 }
 
 from.pb_Date <- function(x){
-	stopifnot(x@type == "Date");
+	stopifnot(x@type == "dataframe.Date");
 	xvalue <- x$value;
 	if(x$has("NA_VALUE")){
 		NA_VALUE <- x$NA_VALUE;
@@ -219,6 +219,11 @@ from.pb_Date <- function(x){
 	}	
 	return(as.Date(xvalue));
 }	
+
+unp <- function(x){
+	#remove package name (everything before first dot)
+	unlist(lapply(lapply(strsplit(x, ".", fixed=T), tail, -1), paste, collapse="."))
+}
 
 as.pb.data.frame <- function(x, ...){
 	mycols <- list(
@@ -233,9 +238,9 @@ as.pb.data.frame <- function(x, ...){
 	);	
 	for(i in 1:length(x)){
 		buf <- as.pb(x[[i]], index=i, name=names(x[i]));
-		mycols[[buf@type]] <- append(mycols[[buf@type]], buf)
+		mycols[[unp(buf@type)]] <- append(mycols[[unp(buf@type)]], buf)
 	}
-	do.call("new", c(list(Class=pb(Dataframe)), mycols))
+	do.call("new", c(list(Class=pb(dataframe.Dataframe)), mycols))
 }
 
 from.pb <- function(x, ...){
@@ -244,21 +249,21 @@ from.pb <- function(x, ...){
 	
 	#manual dispatch depending on msg type
 	switch(x@type,
-		"Dataframe" = from.pb_Dataframe(x, ...),
-		"Numeric" = from.pb_Numeric(x, ...),
-		"Integer" = from.pb_Integer(x, ...),
-		"Factor" = from.pb_Factor(x, ...),
-		"Date" = from.pb_Date(x, ...),
-		"Character" = from.pb_Character(x, ...),
-		"Logical" = from.pb_Logical(x, ...),
-		"POSIXt" = from.pb_POSIXt(x, ...),
-		"Complex" = from.pb_Complex(x, ...),
+		"dataframe.Dataframe" = from.pb_Dataframe(x, ...),
+		"dataframe.Numeric" = from.pb_Numeric(x, ...),
+		"dataframe.Integer" = from.pb_Integer(x, ...),
+		"dataframe.Factor" = from.pb_Factor(x, ...),
+		"dataframe.Date" = from.pb_Date(x, ...),
+		"dataframe.Character" = from.pb_Character(x, ...),
+		"dataframe.Logical" = from.pb_Logical(x, ...),
+		"dataframe.POSIXt" = from.pb_POSIXt(x, ...),
+		"dataframe.Complex" = from.pb_Complex(x, ...),
 		stop("No from.pb for type: ", x@type)
 	)	
 }
 
 from.pb_Dataframe <- function(x, ...){
-	stopifnot(x@type == "Dataframe");
+	stopifnot(x@type == "dataframe.Dataframe");
 	
 	#we use as.list for now. Not sure how to directly get it from the buffer
 	buffer <- as.list(x);

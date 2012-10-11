@@ -30,7 +30,7 @@
 #' obj <- unserialize_pb(msg);
 #' identical(iris, obj);
 #' 
-serialize_pb <- function(object, connection, proto=c("rexp", "dataframe"), ...){
+serialize_pb <- function(object, connection, proto=c("rexp", "dataframe", "stocks"), ...){
 
 	#limited set of proto's
 	proto <- match.arg(proto);
@@ -39,6 +39,7 @@ serialize_pb <- function(object, connection, proto=c("rexp", "dataframe"), ...){
 	msg <- switch(proto,
 		"rexp" = rexp_obj(object),
 		"dataframe" = dataframe_obj(object),
+		"stocks" = stocks_obj(object),
 		stop("Invalid proto")
 	);
 	
@@ -53,8 +54,8 @@ unserialize_pb <- function(connection, proto=c("rexp", "dataframe")){
 	
 	#convert object to protobuf message
 	obj <- switch(proto,
-		"rexp" = unrexp(RProtoBuf::read(pb(REXP), connection)),
-		"dataframe" = from.pb(RProtoBuf::read(pb(Dataframe), connection)),
+		"rexp" = unrexp(RProtoBuf::read(pb(rexp.REXP), connection)),
+		"dataframe" = from.pb(RProtoBuf::read(pb(dataframe.Dataframe), connection)),
 		stop("Invalid proto")
 	);	
 	return(obj);

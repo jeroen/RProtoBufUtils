@@ -1,3 +1,4 @@
+export(download_stocks)
 export(serialize_pb)
 export(unserialize_pb)
 import(RProtoBuf)

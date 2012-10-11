@@ -24,48 +24,48 @@ rexp_obj <- function(obj){
 
 rexp_string <- function(obj){
 	xvalue <- lapply(as.list(obj), function(x){
-		new(pb(STRING), strval=x, isNA=is.na(x))			
+		new(pb(rexp.STRING), strval=x, isNA=is.na(x))			
 	});
-	new(pb(REXP), rclass = 0, stringValue=xvalue);
+	new(pb(rexp.REXP), rclass = 0, stringValue=xvalue);
 }
 
 rexp_raw <- function(obj){
-	new(pb(REXP), rclass= 1, rawValue = obj);
+	new(pb(rexp.REXP), rclass= 1, rawValue = obj);
 }
 
 rexp_double <- function(obj){
-	new(pb(REXP), rclass=2, realValue = obj);
+	new(pb(rexp.REXP), rclass=2, realValue = obj);
 }
 
 rexp_complex <- function(obj){
 	xvalue <- lapply(as.list(obj), function(x){
-		new(pb(CMPLX), real=Re(x), imag=Im(x))			
+		new(pb(rexp.CMPLX), real=Re(x), imag=Im(x))			
 	});	
-	new(pb(REXP), rclass=3, complexValue = xvalue);
+	new(pb(rexp.REXP), rclass=3, complexValue = xvalue);
 }
 
 rexp_integer <- function(obj){
-	new(pb(REXP), rclass=4, intValue = obj);
+	new(pb(rexp.REXP), rclass=4, intValue = obj);
 }
 
 rexp_list <- function(obj){
 	xobj <- lapply(obj, rexp_obj);
-	new(pb(REXP), rclass=5, rexpValue = xobj);
+	new(pb(rexp.REXP), rclass=5, rexpValue = xobj);
 }
 
 rexp_logical <- function(obj){
 	xobj <- as.integer(obj);
 	xobj[is.na(obj)] <- 2;
-	new(pb(REXP), rclass=6, booleanValue = xobj);
+	new(pb(rexp.REXP), rclass=6, booleanValue = xobj);
 }
 
 rexp_null <- function(){
-	new(pb(REXP), rclass=7)
+	new(pb(rexp.REXP), rclass=7)
 }
 
 unrexp <- function(msg){
 	stopifnot(is(msg, "Message"));
-	stopifnot(msg@type == "REXP");
+	stopifnot(msg@type == "rexp.REXP");
 	
 	myrexp <- as.list(msg);
 	xobj <- switch(as.character(myrexp$rclass),

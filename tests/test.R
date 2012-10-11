@@ -1,3 +1,6 @@
+#load package
+library(RProtoBufUtils)
+
 #data frame
 data(testdata)
 

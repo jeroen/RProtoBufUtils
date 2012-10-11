@@ -1,0 +1,19 @@
+package stocks;
+
+message Date {
+  required string value = 1;
+}
+
+message record {
+  required Date Date = 1;
+  required double Open = 2;
+  required double Close = 3;
+  required double Low = 4;
+  required double High = 5;
+  required int32 Volume = 6;
+}
+
+message data {
+  required string symbol = 1;
+  repeated record days = 2;
+}

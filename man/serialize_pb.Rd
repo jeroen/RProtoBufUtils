@@ -4,7 +4,7 @@
 \title{Serializes R object to Protocol Buffer Message.}
 \usage{
   serialize_pb(object, connection,
-    proto = c("rexp", "dataframe"), ...)
+    proto = c("rexp", "dataframe", "stocks"), ...)
 }
 \arguments{
   \item{object}{R object to serialize}
