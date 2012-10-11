@@ -18,7 +18,7 @@ del msg
 import os;
 os.system('wget https://raw.github.com/jeroenooms/RProtoBufUtils/master/inst/messages/msg_stocks.bin');
 msg = stocks_pb2.data();
-f = open('msg_rexp.bin', 'rb')
+f = open('msg_stocks.bin', 'rb')
 msg.ParseFromString(f.read())
 f.close();
 print(msg)
