@@ -1,0 +1,145 @@
+\documentclass[a4paper]{article}
+
+%\VignetteIndexEntry{Sweave User Manual}
+%\VignettePackage{utils}
+%\VignetteDepends{tools}
+%\VignetteDepends{datasets}
+%\VignetteDepends{stats}
+
+\title{RProtoBufUtils: Serialization Performance}
+\author{Murray Stokely}
+
+\usepackage[round]{natbib}
+\usepackage{Sweave}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{tabularx}
+
+\lstset{frame=trbl,basicstyle=\small\tt}
+\usepackage{hyperref}
+\usepackage{color}
+\definecolor{Blue}{rgb}{0,0,0.8}
+\hypersetup{%
+colorlinks,%
+plainpages=true,%
+linkcolor=black,%
+citecolor=black,%
+urlcolor=Blue,%
+%pdfstartview=FitH,% or Fit
+pdfstartview={XYZ null null 1},%
+pdfview={XYZ null null null},%
+pdfpagemode=UseNone,% for no outline
+pdfauthor={Murray Stokely},%
+pdftitle={RProtoBufUtils: Serialization Performance},%
+pdfsubject={R vignette documentation system}%
+}
+
+\sloppy
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+\textbf{RProtoBufUtils} provides a number of higher-level methods to convert R \citep{R}
+objects into Protocol Buffer messages with RProtoBuf \citep{rprotobuf}.  Protocol
+buffers are an efficient cross-platform serialization format that
+provides a simple API with getters and setters in Python, C++, Java,
+and other popular languages \citep{Pike:2005:IDP:1239655.1239658,protobuf}.
+This document focuses on quantifying the differences of RProtoBuf's
+serialization performance for common data sets.
+
+\section{data.frame to Protocol Buffer Conversion}
+\label{sec:conversion}
+
+\textbf{RProtoBufUtils} provides a common Protocol Buffer format borrowed
+from \cite{rhipe} that can express most R language objects.  The
+\texttt{serialize\_pb} method converts R objects into serialized
+protocol buffers in this format, and the \texttt{can\_serialize\_pb}
+method can be used to determine whether the given R object can safely
+be expressed in this way.  To show how how this method works, we
+attempt to convert all of the built-in datasets from R into this
+serialized protocol buffer representation.
+
+<<echo=TRUE>>=
+library(RProtoBufUtils)
+
+datasets <- subset(as.data.frame(data()$results), Package=="datasets")
+datasets$load.name <- sub("\\s+.*$", "", datasets$Item)
+n <- nrow(datasets)
+@
+
+There are \Sexpr{n} standard data sets included in R.  We use the
+\texttt{can\_serialize\_pb} method to determine how many of those can
+be safely converted to a serialized protocol buffer representation.
+
+<<echo=TRUE>>=
+datasets$valid.proto <- sapply(datasets$load.name, function(x) can_serialize_pb(eval(as.name(x))))
+datasets <- subset(datasets, valid.proto==TRUE)
+m <- nrow(datasets)
+@
+
+\Sexpr{m} data sets could be converted to Protocol Buffers
+(\Sexpr{format(m/n,digits=2)}\%).  The next section illustrates how
+many bytes were usued to store the data sets under four different
+situations (1) normal R serialization, (2) R serialization followed by
+gzip, (3) normal protocol buffer serialization, (4) protocol buffer
+serialization followed by gzip.
+
+\subsection{Compression Performance}
+\label{sec:compression}
+
+<<echo=TRUE>>=
+datasets$object.size <- unname(sapply(datasets$load.name, function(x) object.size(eval(as.name(x)))))
+
+datasets$R.serialize.size <- unname(sapply(datasets$load.name, function(x) length(serialize(eval(as.name(x)), NULL))))
+
+datasets$R.serialize.size <- unname(sapply(datasets$load.name, function(x) length(serialize(eval(as.name(x)), NULL))))
+
+datasets$R.serialize.size.gz <- unname(sapply(datasets$load.name, function(x) length(memCompress(serialize(eval(as.name(x)), NULL), "gzip"))))
+
+datasets$RProtoBuf.serialize.size <- unname(sapply(datasets$load.name, function(x) length(serialize_pb(eval(as.name(x)), NULL))))
+
+datasets$RProtoBuf.serialize.size.gz <- unname(sapply(datasets$load.name, function(x) length(memCompress(serialize_pb(eval(as.name(x)), NULL), "gzip"))))
+
+clean.df <- data.frame(dataset=datasets$load.name,
+                       object.size=datasets$object.size,
+                       "serialized"=datasets$R.serialize.size,
+                       "gzipped serialized"=datasets$R.serialize.size.gz,
+                       "RProtoBuf"=datasets$RProtoBuf.serialize.size,
+                       "gzipped RProtoBuf"=datasets$RProtoBuf.serialize.size.gz,
+                       check.names=FALSE)
+@
+
+The summary compression sizes are listed below, and a full table for a
+sample of 50 datasets is included on the next page.  Sizes are comparable
+but protocol buffers provide simple getters and setters in multiple
+languages instead of requiring other programs to parse the R
+serialization format \citep{serialization}.
+
+<<echo=TRUE>>=
+summary(clean.df)
+@
+
+<<label=tab1,echo=FALSE,results=tex>>=
+library(xtable)
+clean.xt <- xtable(clean.df[sample(1:nrow(clean.df), 50),],
+                   caption="Serialization Sizes for 50 sampled R Datasets")
+align(clean.xt) <- "r|l|r|r|r|r|r"
+print(clean.xt, scalebox=0.7,  tabular.environment="tabularx", width="\\textwidth")
+@ 
+
+\section{Serialization Performance}
+\label{sec:performance}
+
+\bibliographystyle{apalike}
+\bibliography{refs}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
