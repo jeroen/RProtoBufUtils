@@ -13,4 +13,3 @@ Depends:
     R (>= 2.14)
 Imports:
     RProtoBuf
-
