@@ -1,3 +1,36 @@
+
+
+can_serialize_pb <- rexp_valid <- function(obj) {
+  valid.types <- c("character",
+                   "raw",
+                   "double",
+                   "complex",
+                   "integer",
+                   "list",
+                   "logical",
+                   "NULL")
+  sm <- storage.mode(obj)
+  if (sm %in% valid.types) {
+    if (sm == "list") {
+      if (any(! unlist(lapply(obj, rexp_valid)))) {
+        return(FALSE)
+      }
+    }
+  } else {
+    return(FALSE)
+  }
+  attrib <- attributes(obj)
+  if (is.null(attrib)) {
+    return(TRUE)
+  }
+  if (rexp_valid(names(attrib))) {
+    if (rexp_valid(unname(attrib))) {
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
+
 rexp_obj <- function(obj){
 	sm <- storage.mode(obj);
 	msg <- switch(sm,
@@ -126,5 +159,3 @@ unrexp_logical <- function(myrexp){
 unrexp_null <- function(){
 	return(NULL)
 }
-
-
