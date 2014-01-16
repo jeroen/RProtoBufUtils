@@ -1,10 +1,7 @@
-### Update 
-
-*Most functionality from this package has been merged into RProtoBuf version 0.4. The RProtoBufUtils package will no longer be maintained.*
-
-
 RProtoBufUtils
 ==============
+
+*As of January 2014, most functionality from this package has been merged into RProtoBuf version 0.4. The RProtoBufUtils package will no longer be maintained.*
 
 This package provides some tools and utilities to serialize R objects to with protocol buffers. It builds on the [RProtoBuf](http://r-forge.r-project.org/projects/rprotobuf/) package, which interfaces to the official protocol buffers C++ library by Google.
 
