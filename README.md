@@ -1,6 +1,6 @@
 ### Update 
 
-**Most functionality from this package has been merged into RProtoBuf version 0.4. The RProtoBufUtils package will no longer be maintained. **
+*Most functionality from this package has been merged into RProtoBuf version 0.4. The RProtoBufUtils package will no longer be maintained.*
 
 
 RProtoBufUtils
